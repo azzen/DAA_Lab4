@@ -1,6 +1,7 @@
 package ch.heigvd.lab4.room.dao
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -8,6 +9,9 @@ import ch.heigvd.lab4.models.Note
 import ch.heigvd.lab4.models.NoteAndSchedule
 import ch.heigvd.lab4.models.Schedule
 
+/**
+ * @author Hugo DUCOMMUN, Rayane ANNEN
+ */
 @Dao
 interface NoteScheduleDao {
     @Insert

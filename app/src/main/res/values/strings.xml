@@ -8,4 +8,9 @@
     <string name="menu_eta">ETA</string>
     <string name="menu_filter">Filter</string>
     <string name="my_notes">My notes</string>
+    <string name="late">Late</string>
+    <string name="months">%d months</string>
+    <string name="weeks">%d weeks</string>
+    <string name="today">Today</string>
+    <string name="days">%d days</string>
 </resources>

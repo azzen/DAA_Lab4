@@ -1,14 +1,25 @@
 package ch.heigvd.lab4.room
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ch.heigvd.lab4.models.Note
+import ch.heigvd.lab4.models.NoteAndSchedule
 import ch.heigvd.lab4.models.Schedule
 import ch.heigvd.lab4.room.repositories.NoteRepository
 
+enum class SortList {
+    BY_SCHEDULE,
+    BY_CREATION_DATE
+}
+
 class NoteViewModel(private val noteRepository: NoteRepository) : ViewModel() {
-    val allNotes = noteRepository.allNotes
+    private val _allNotes = noteRepository.allNotes
+    val allNotes : LiveData<List<NoteAndSchedule>> get() = _allNotes
     val noteCount = noteRepository.noteCount
+    private val _sortList = MutableLiveData(SortList.BY_SCHEDULE)
+    val sortList : LiveData<SortList> get() = _sortList
 
     fun insert(note: Note, schedule: Schedule?) {
         noteRepository.insert(note, schedule)
@@ -18,10 +29,16 @@ class NoteViewModel(private val noteRepository: NoteRepository) : ViewModel() {
         noteRepository.deleteAll()
     }
 
-    fun sortNotes() {
-        // TODO: sort notes by schedule
+    fun sortNotes(sort: SortList) {
+        when(sort) {
+            SortList.BY_CREATION_DATE -> {
+                _sortList.postValue(sort)
+            }
+            SortList.BY_SCHEDULE -> {
+                _sortList.postValue(sort)
+            }
+        }
     }
-
 }
 
 class NoteViewModelFactory(private val repository: NoteRepository) : ViewModelProvider.Factory {

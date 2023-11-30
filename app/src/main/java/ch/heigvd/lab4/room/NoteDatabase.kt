@@ -11,6 +11,13 @@ import ch.heigvd.lab4.models.Schedule
 import ch.heigvd.lab4.room.converters.CalendarConverter
 import ch.heigvd.lab4.room.dao.NoteScheduleDao
 
+/**
+ * Database for Note and Schedule (singleton)
+ * @property noteScheduleDao DAO for Note and Schedule
+ * @constructor Create empty Note database
+ * @author Hugo DUCOMMUN, Rayane ANNEN
+ *
+ */
 @Database(entities = [Note::class, Schedule::class],
     version = 1,
     exportSchema = true)

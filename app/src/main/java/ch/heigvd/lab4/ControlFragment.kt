@@ -5,28 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import android.widget.Button
+import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import ch.heigvd.lab4.models.Note
+import ch.heigvd.lab4.room.NoteViewModel
+import ch.heigvd.lab4.room.NoteViewModelFactory
 
 /**
- * A simple [Fragment] subclass.
- * Use the [ControlFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Control panel fragment (instead of the menu in the landscape mode)
+ * author: Hugo DUCOMMUN, Rayane ANNEN
  */
 class ControlFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private val noteViewModel : NoteViewModel by activityViewModels {
+        NoteViewModelFactory((requireActivity().application as App).repository)
     }
 
     override fun onCreateView(
@@ -37,23 +29,29 @@ class ControlFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_control, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ControlFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ControlFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // bind views
+        val generate = view.findViewById<Button>(R.id.btn_generate_notes)
+        val delete = view.findViewById<Button>(R.id.btn_delete_notes)
+        val counter = view.findViewById<TextView>(R.id.count_notes)
+
+        // update counter when the number of notes changes
+
+        noteViewModel.noteCount.observe(viewLifecycleOwner) {
+            counter.text = it.toString()
+        }
+
+        // setup listeners
+
+        generate.setOnClickListener {
+            val note = Note.generateRandomNote()
+            val schedule = Note.generateRandomSchedule()
+            noteViewModel.insert(note, schedule = schedule)
+        }
+
+        delete.setOnClickListener {
+            noteViewModel.deleteAll()
+        }
     }
 }
